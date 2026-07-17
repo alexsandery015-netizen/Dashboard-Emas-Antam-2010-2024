@@ -120,7 +120,7 @@ if "Distribusi Harga (Histogram)" in visual_terpilih:
 # --- Visualisasi 3: Boxplot ---
 if "Distribusi Harga (Boxplot)" in visual_terpilih:
     st.subheader("Boxplot Distribusi Harga Emas Batangan Antam")
-    fig, ax = plt.subplots(figsize=(7, 5))
+    fig, ax = plt.subplots(figsize=6, 4))
     sns.boxplot(x=df_filtered["Harga"], ax=ax)
     ax.set_xlabel("Harga (Rp/gram)")
     plt.tight_layout()
@@ -131,7 +131,7 @@ if "Rata-rata Tahunan & YoY" in visual_terpilih:
     st.subheader("Rata-rata Harga Tahunan dan Pertumbuhan YoY")
     rata_tahunan = df_filtered.groupby('Tahun')['Harga'].mean()
     yoy = rata_tahunan.pct_change() * 100
-    fig, ax1 = plt.subplots(figsize=(10, 6))
+    fig, ax1 = plt.subplots(figsize=(8, 5))
     ax1.bar(rata_tahunan.index, rata_tahunan.values, color=colors['primary'], label='Rata-rata Harga')
     ax1.set_ylabel('Rata-rata Harga (Rp/gram)')
     ax2 = ax1.twinx()
@@ -144,7 +144,7 @@ if "Rata-rata Tahunan & YoY" in visual_terpilih:
 if "Heatmap Tahun vs Bulan" in visual_terpilih:
     st.subheader("Heatmap Rata-rata Harga Emas Antam per Tahun dan Bulan")
     pivot = df_filtered.pivot_table(index='Tahun', columns='Bulan', values='Harga', aggfunc='mean')
-    fig, ax = plt.subplots(figsize=(12, 8))
+    fig, ax = plt.subplots(figsize=(8, 5))
     sns.heatmap(pivot, cmap='YlOrRd', annot=False, ax=ax)
     ax.set_xlabel('Bulan')
     ax.set_ylabel('Tahun')
@@ -154,7 +154,7 @@ if "Heatmap Tahun vs Bulan" in visual_terpilih:
 # --- Visualisasi 6: Volatilitas Return Harian ---
 if "Volatilitas Return Harian" in visual_terpilih:
     st.subheader("Volatilitas Return Harian Harga Emas Antam")
-    fig, ax = plt.subplots(figsize=(12, 6))
+    fig, ax = plt.subplots(figsize=(8, 5))
     ax.plot(df_filtered['Tanggal'], df_filtered['Return'], linewidth=0.7, color=colors['purple'])
     ax.axhline(0, color='black', linewidth=0.8, linestyle='--')
     ax.set_xlabel('Tahun')
@@ -166,7 +166,7 @@ if "Volatilitas Return Harian" in visual_terpilih:
 # --- Visualisasi 7: Deteksi Outlier dengan Z-Score ---
 if "Deteksi Outlier (Z-Score)" in visual_terpilih:
     st.subheader("Deteksi Outlier dengan Metode Z-Score")
-    fig, ax = plt.subplots(figsize=(12, 6))
+    fig, ax = plt.subplots(figsize=(8, 5))
     ax.plot(df_filtered['Tanggal'], df_filtered['Harga'], color=colors['primary'], linewidth=1, label='Harga')
     outlier_mask = df_filtered['zscore'].abs() > 3
     ax.scatter(df_filtered.loc[outlier_mask, 'Tanggal'], df_filtered.loc[outlier_mask, 'Harga'],
@@ -184,7 +184,7 @@ if "Deteksi Outlier (Z-Score)" in visual_terpilih:
 # --- Visualisasi 8: Cumulative Return ---
 if "Cumulative Return" in visual_terpilih:
     st.subheader("Cumulative Return Investasi Emas Antam")
-    fig, ax = plt.subplots(figsize=(12, 6))
+    fig, ax = plt.subplots(figsize=(8, 5))
     ax.plot(df_filtered['Tanggal'], df_filtered['Cumulative_Return'], color=colors['accent'],
             linewidth=1.5, label='Cumulative Return')
     ax.axhline(1, color='gray', linewidth=1, linestyle='--', label='Titik Impas (Breakeven)')

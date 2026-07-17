@@ -131,7 +131,7 @@ if "Rata-rata Tahunan & YoY" in visual_terpilih:
     st.subheader("Rata-rata Harga Tahunan dan Pertumbuhan YoY")
     rata_tahunan = df_filtered.groupby('Tahun')['Harga'].mean()
     yoy = rata_tahunan.pct_change() * 100
-    fig, ax1 = plt.subplots(figsize=(12, 6))
+    fig, ax1 = plt.subplots(figsize=(12, 5))
     ax1.bar(rata_tahunan.index, rata_tahunan.values, color=colors['primary'], label='Rata-rata Harga')
     ax1.set_ylabel('Rata-rata Harga (Rp/gram)')
     ax2 = ax1.twinx()

@@ -144,7 +144,7 @@ if "Rata-rata Tahunan & YoY" in visual_terpilih:
 if "Heatmap Tahun vs Bulan" in visual_terpilih:
     st.subheader("Heatmap Rata-rata Harga Emas Antam per Tahun dan Bulan")
     pivot = df_filtered.pivot_table(index='Tahun', columns='Bulan', values='Harga', aggfunc='mean')
-    fig, ax = plt.subplots(figsize=(8, 3))
+    fig, ax = plt.subplots(figsize=(8, 4))
     sns.heatmap(pivot, cmap='YlOrRd', annot=False, ax=ax)
     ax.set_xlabel('Bulan')
     ax.set_ylabel('Tahun')

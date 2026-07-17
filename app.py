@@ -96,7 +96,7 @@ st.markdown("---")
 # --- Visualisasi 1: Tren Harga dan MA-100 ---
 if "Tren Harga & MA-100" in visual_terpilih:
     st.subheader("Tren Harga Emas Antam dan Moving Average 100 Hari")
-    fig, ax = plt.subplots(figsize=(12, 6))
+    fig, ax = plt.subplots(figsize=(12, 5))
     ax.plot(df_filtered['Tanggal'], df_filtered['Harga'], color=colors['primary'],
             label='Harga Harian', linewidth=1)
     ax.plot(df_filtered['Tanggal'], df_filtered['MA_100'], color=colors['secondary'],
@@ -110,7 +110,7 @@ if "Tren Harga & MA-100" in visual_terpilih:
 # --- Visualisasi 2: Distribusi Harga (Histogram + KDE) ---
 if "Distribusi Harga (Histogram)" in visual_terpilih:
     st.subheader("Histogram Distribusi Harga Emas Antam dengan Kurva KDE")
-    fig, ax = plt.subplots(figsize=(10, 6))
+    fig, ax = plt.subplots(figsize=(10, 5))
     sns.histplot(df_filtered['Harga'], kde=True, bins=40, ax=ax)
     ax.set_xlabel('Harga (Rp/gram)')
     ax.set_ylabel('Frekuensi')
@@ -120,7 +120,7 @@ if "Distribusi Harga (Histogram)" in visual_terpilih:
 # --- Visualisasi 3: Boxplot ---
 if "Distribusi Harga (Boxplot)" in visual_terpilih:
     st.subheader("Boxplot Distribusi Harga Emas Batangan Antam")
-    fig, ax = plt.subplots(figsize=(8, 5))
+    fig, ax = plt.subplots(figsize=(7, 5))
     sns.boxplot(x=df_filtered["Harga"], ax=ax)
     ax.set_xlabel("Harga (Rp/gram)")
     plt.tight_layout()
@@ -131,7 +131,7 @@ if "Rata-rata Tahunan & YoY" in visual_terpilih:
     st.subheader("Rata-rata Harga Tahunan dan Pertumbuhan YoY")
     rata_tahunan = df_filtered.groupby('Tahun')['Harga'].mean()
     yoy = rata_tahunan.pct_change() * 100
-    fig, ax1 = plt.subplots(figsize=(12, 6))
+    fig, ax1 = plt.subplots(figsize=(10, 6))
     ax1.bar(rata_tahunan.index, rata_tahunan.values, color=colors['primary'], label='Rata-rata Harga')
     ax1.set_ylabel('Rata-rata Harga (Rp/gram)')
     ax2 = ax1.twinx()

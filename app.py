@@ -131,7 +131,7 @@ if "Rata-rata Tahunan & YoY" in visual_terpilih:
     st.subheader("Rata-rata Harga Tahunan dan Pertumbuhan YoY")
     rata_tahunan = df_filtered.groupby('Tahun')['Harga'].mean()
     yoy = rata_tahunan.pct_change() * 100
-    fig, ax1 = plt.subplots(figsize=(12, 5))
+    fig, ax1 = plt.subplots(figsize=(12, 5.5))
     ax1.bar(rata_tahunan.index, rata_tahunan.values, color=colors['primary'], label='Rata-rata Harga')
     ax1.set_ylabel('Rata-rata Harga (Rp/gram)')
     ax2 = ax1.twinx()
@@ -144,7 +144,7 @@ if "Rata-rata Tahunan & YoY" in visual_terpilih:
 if "Heatmap Tahun vs Bulan" in visual_terpilih:
     st.subheader("Heatmap Rata-rata Harga Emas Antam per Tahun dan Bulan")
     pivot = df_filtered.pivot_table(index='Tahun', columns='Bulan', values='Harga', aggfunc='mean')
-    fig, ax = plt.subplots(figsize=(6, 4))
+    fig, ax = plt.subplots(figsize=(8, 3))
     sns.heatmap(pivot, cmap='YlOrRd', annot=False, ax=ax)
     ax.set_xlabel('Bulan')
     ax.set_ylabel('Tahun')

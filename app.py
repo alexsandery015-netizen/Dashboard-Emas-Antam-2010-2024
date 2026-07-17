@@ -120,7 +120,7 @@ if "Distribusi Harga (Histogram)" in visual_terpilih:
 # --- Visualisasi 3: Boxplot ---
 if "Distribusi Harga (Boxplot)" in visual_terpilih:
     st.subheader("Boxplot Distribusi Harga Emas Batangan Antam")
-    fig, ax = plt.subplots(figsize=(8, 5))
+    fig, ax = plt.subplots(figsize=(6, 4))
     sns.boxplot(x=df_filtered["Harga"], ax=ax)
     ax.set_xlabel("Harga (Rp/gram)")
     plt.tight_layout()
@@ -144,7 +144,7 @@ if "Rata-rata Tahunan & YoY" in visual_terpilih:
 if "Heatmap Tahun vs Bulan" in visual_terpilih:
     st.subheader("Heatmap Rata-rata Harga Emas Antam per Tahun dan Bulan")
     pivot = df_filtered.pivot_table(index='Tahun', columns='Bulan', values='Harga', aggfunc='mean')
-    fig, ax = plt.subplots(figsize=(12, 8))
+    fig, ax = plt.subplots(figsize=(6, 4))
     sns.heatmap(pivot, cmap='YlOrRd', annot=False, ax=ax)
     ax.set_xlabel('Bulan')
     ax.set_ylabel('Tahun')

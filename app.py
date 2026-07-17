@@ -1,21 +1,10 @@
-# -*- coding: utf-8 -*-
-"""
-Dashboard Interaktif Harga Emas Batangan Antam (2010-2024)
-Dibangun dengan Streamlit, membaca dataset yang sudah bersih
-(antam_price_clean.csv) hasil preprocessing di Google Colab.
-"""
-
-# ============================================================
-# BAGIAN 1: IMPORT LIBRARY DAN PEMUATAN DATA
-# ============================================================
 import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-sns.set_theme(style="whitegrid", palette="crest")
-plt.rcParams["figure.figsize"] = (10, 6)
+sns.set_style("whitegrid")
 
 colors = {
     "primary": "#1f77b4",
@@ -25,44 +14,39 @@ colors = {
     "purple": "#9467bd"
 }
 
-st.set_page_config(page_title="Dashboard Harga Emas Antam", layout="wide")
+# KONFIGURASI HALAMAN
+st.set_page_config(
+    page_title="Dashboard Harga Emas Antam",
+    layout="wide"
+)
 
+st.title("Dashboard Interaktif Harga Emas Batangan Antam (2010-2024)")
+st.markdown("Visualisasi tren, distribusi, dan pergerakan harga emas batangan Antam berdasarkan hasil Exploratory Data Analysis (EDA).")
 
+# LOAD DAN PROSES DATA
 @st.cache_data
 def load_data():
     df = pd.read_csv("antam_price_clean.csv")
-    df['Tanggal'] = pd.to_datetime(df['Tanggal'])
-    df['Harga'] = pd.to_numeric(df['Harga'], errors='coerce')
-    df = df.sort_values('Tanggal').reset_index(drop=True)
-    return df
+    df["Tanggal"] = pd.to_datetime(df["Tanggal"])
+    df["Harga"] = pd.to_numeric(df["Harga"])
+    df = df.sort_values(by="Tanggal").reset_index(drop=True)
 
+    df["Tahun"] = df["Tanggal"].dt.year
+    df["Bulan"] = df["Tanggal"].dt.month
+    df["Return"] = df["Harga"].pct_change()
+    df["MA_100"] = df["Harga"].rolling(100).mean()
+    df["Cumulative_Return"] = (1 + df["Return"].fillna(0)).cumprod()
+    df["zscore"] = (df["Harga"] - df["Harga"].mean()) / df["Harga"].std()
+    return df
 
 df = load_data()
 
-# ============================================================
-# BAGIAN 2: REKAYASA FITUR DAN PERHITUNGAN STATISTIK
-# ============================================================
-df['Tahun'] = df['Tanggal'].dt.year
-df['Bulan'] = df['Tanggal'].dt.month
-df['Return'] = df['Harga'].pct_change()
-df['MA_100'] = df['Harga'].rolling(window=100).mean()
-df['Cumulative_Return'] = (1 + df['Return'].fillna(0)).cumprod()
-df['zscore'] = (df['Harga'] - df['Harga'].mean()) / df['Harga'].std()
+# SIDEBAR - FILTER INTERAKTIF
+st.sidebar.header("Filter Data")
 
-st.title("📊 Dashboard Interaktif Harga Emas Batangan Antam (2010–2024)")
+tahun_min = int(df["Tahun"].min())
+tahun_max = int(df["Tahun"].max())
 
-col1, col2, col3, col4 = st.columns(4)
-col1.metric("Harga Rata-rata", f"Rp{df['Harga'].mean():,.0f}")
-col2.metric("Harga Minimum", f"Rp{df['Harga'].min():,.0f}")
-col3.metric("Harga Maksimum", f"Rp{df['Harga'].max():,.0f}")
-col4.metric("Std Deviasi", f"Rp{df['Harga'].std():,.0f}")
-
-# ============================================================
-# BAGIAN 3: ELEMEN INTERAKTIF DAN VISUALISASI
-# ============================================================
-st.sidebar.header("Filter Dashboard")
-
-tahun_min, tahun_max = int(df['Tahun'].min()), int(df['Tahun'].max())
 rentang_tahun = st.sidebar.slider(
     "Pilih Rentang Tahun",
     min_value=tahun_min,
@@ -70,23 +54,44 @@ rentang_tahun = st.sidebar.slider(
     value=(tahun_min, tahun_max)
 )
 
-opsi_visual = [
-    "Tren Harga & MA-100",
-    "Distribusi Harga (Histogram)",
-    "Distribusi Harga (Boxplot)",
-    "Rata-rata Tahunan & YoY",
-    "Heatmap Tahun vs Bulan",
-    "Volatilitas Return Harian",
-    "Deteksi Outlier (Z-Score)",
-    "Cumulative Return"
-]
 visual_terpilih = st.sidebar.multiselect(
     "Pilih Visualisasi yang Ditampilkan",
-    options=opsi_visual,
-    default=opsi_visual
+    options=[
+        "Tren Harga & MA-100",
+        "Distribusi Harga (Histogram)",
+        "Distribusi Harga (Boxplot)",
+        "Rata-rata Tahunan & YoY",
+        "Heatmap Tahun vs Bulan",
+        "Volatilitas Return Harian",
+        "Deteksi Outlier (Z-Score)",
+        "Cumulative Return"
+    ],
+    default=[
+        "Tren Harga & MA-100",
+        "Distribusi Harga (Histogram)",
+        "Distribusi Harga (Boxplot)",
+        "Rata-rata Tahunan & YoY",
+        "Heatmap Tahun vs Bulan",
+        "Volatilitas Return Harian",
+        "Deteksi Outlier (Z-Score)",
+        "Cumulative Return"
+    ]
 )
 
-df_filtered = df[(df['Tahun'] >= rentang_tahun[0]) & (df['Tahun'] <= rentang_tahun[1])]
+df_filtered = df[(df["Tahun"] >= rentang_tahun[0]) & (df["Tahun"] <= rentang_tahun[1])]
+
+st.sidebar.markdown("---")
+st.sidebar.metric("Jumlah Baris Data", f"{len(df_filtered):,}")
+st.sidebar.metric("Harga Terakhir", f"Rp {df_filtered['Harga'].iloc[-1]:,.0f}")
+
+# RINGKASAN STATISTIK
+col1, col2, col3, col4 = st.columns(4)
+col1.metric("Harga Rata-rata", f"Rp {df_filtered['Harga'].mean():,.0f}")
+col2.metric("Harga Minimum", f"Rp {df_filtered['Harga'].min():,.0f}")
+col3.metric("Harga Maksimum", f"Rp {df_filtered['Harga'].max():,.0f}")
+col4.metric("Standar Deviasi", f"Rp {df_filtered['Harga'].std():,.0f}")
+
+st.markdown("---")
 
 # --- Visualisasi 1: Tren Harga dan MA-100 ---
 if "Tren Harga & MA-100" in visual_terpilih:
@@ -190,3 +195,5 @@ if "Cumulative Return" in visual_terpilih:
     st.pyplot(fig)
     st.caption(f"Cumulative return akhir periode: {df_filtered['Cumulative_Return'].iloc[-1]:.2f} kali lipat")
 
+st.markdown("---")
+st.caption("Sumber data: Kaggle antam_price. Dashboard dibangun menggunakan Streamlit sebagai bagian dari Penulisan Ilmiah EDA Harga Emas Batangan Antam 2010-2024.")

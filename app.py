@@ -189,3 +189,4 @@ if "Cumulative Return" in visual_terpilih:
     plt.tight_layout()
     st.pyplot(fig)
     st.caption(f"Cumulative return akhir periode: {df_filtered['Cumulative_Return'].iloc[-1]:.2f} kali lipat")
+

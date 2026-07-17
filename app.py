@@ -120,7 +120,7 @@ if "Distribusi Harga (Histogram)" in visual_terpilih:
 # --- Visualisasi 3: Boxplot ---
 if "Distribusi Harga (Boxplot)" in visual_terpilih:
     st.subheader("Boxplot Distribusi Harga Emas Batangan Antam")
-    fig, ax = plt.subplots(figsize=(6, 4))
+    fig, ax = plt.subplots(figsize=(10, 1.25))
     sns.boxplot(x=df_filtered["Harga"], ax=ax)
     ax.set_xlabel("Harga (Rp/gram)")
     plt.tight_layout()
